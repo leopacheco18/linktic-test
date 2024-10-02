@@ -1,12 +1,16 @@
 [submodule "linktic-frontend"]
 	path = linktic-frontend
 	url = https://github.com/leopacheco18/linktic-frontend.git
+	branch = main
 [submodule "linktic-ms-auth"]
 	path = linktic-ms-auth
 	url = https://github.com/leopacheco18/linktic-ms-auth.git
+	branch = main
 [submodule "linktic-ms-orders"]
 	path = linktic-ms-orders
 	url = https://github.com/leopacheco18/linktic-ms-orders.git
+	branch = main
 [submodule "linktic-ms-products"]
 	path = linktic-ms-products
 	url = https://github.com/leopacheco18/linktic-ms-products.git
+	branch = main
