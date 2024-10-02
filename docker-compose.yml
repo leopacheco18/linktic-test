@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  linktic-ms-products:
+    build: ./linktic-ms-products
+    container_name: linktic-ms-products
+    ports:
+      - "3003:3003"
+    environment:
+      - PORT=3003
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - DB_NAME=linktic
+      - AWS_ACCESS_KEY_ID=AKIA3PLBNPQ5ITJ4T77O
+      - AWS_SECRET_ACCESS_KEY=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
+      - AWS_REGION=us-east-2
+      - AWS_S3_BUCKET=lpacheco-linktic
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  linktic-ms-orders:
+    build: ./linktic-ms-orders
+    container_name: linktic-ms-orders
+    ports:
+      - "3004:3004"
+    environment:
+      - PORT=3004
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - DB_NAME=linktic
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  linktic-ms-auth:
+    build: ./linktic-ms-auth
+    container_name: linktic-ms-auth
+    ports:
+      - "3005:3005"
+    environment:
+      - PORT=3005
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - DB_NAME=linktic
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  react-app:
+    build: ./linktic-frontend
+    container_name: linktic-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - linktic-ms-products
+      - linktic-ms-orders
+      - linktic-ms-auth
+    networks:
+      - app-network
+
+  # Base de datos PostgreSQL
+  db:
+    image: postgres:14
+    container_name: postgres-linktic-db
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: linktic
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
